@@ -3,11 +3,24 @@ upstream app_arbesfeld {
     server 127.0.0.1:3000;
 }
 
+server {
+   listen 80;
+ 
+   server_name arbesfeld.com;
+ 
+   return 301 $scheme://www.arbesfeld.com$request_uri;
+}
 # the nginx server instance
 server {
     listen 0.0.0.0:80;
-    server_name arbesfeld.com arbesfeld;
+    server_name www.arbesfeld.com arbesfeld;
     access_log /var/log/nginx/arbesfeld.log;
+
+    error_page 400 404 500 502 503 504 /50x.html;
+    location  /50x.html { 
+         internal;
+         root /usr/share/nginx/www;
+    }
 
     # pass the request to the node.js server with the correct headers and much more can be added, see nginx config options
     location / {
